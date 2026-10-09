@@ -1,0 +1,46 @@
+name: Plugin tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - name: Check out plugin
+        uses: actions/checkout@v4
+        with:
+          path: signalk-navico-mfd-app
+      - name: Check out patched server API
+        uses: actions/checkout@v4
+        with:
+          repository: macjl/signalk-server
+          ref: b546f09b5a46f3f2eed74bd88a34b6268e15ca44
+          path: signalk-server-navico-webapps
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install SDK dependencies
+        working-directory: signalk-server-navico-webapps
+        run: npm install --workspace @signalk/server-api --include-workspace-root --ignore-scripts --no-audit --no-fund
+      - name: Build patched SDK
+        working-directory: signalk-server-navico-webapps
+        run: npm run build --workspace @signalk/server-api
+      - name: Install plugin dependencies
+        working-directory: signalk-navico-mfd-app
+        run: npm ci --no-audit --no-fund
+      - name: Test plugin
+        working-directory: signalk-navico-mfd-app
+        run: npm test
+      - name: Inspect package contents without publishing
+        working-directory: signalk-navico-mfd-app
+        run: npm pack --dry-run

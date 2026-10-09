@@ -1,0 +1,45 @@
+{
+  "name": "signalk-navico-mfd-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Discover Navico MFD applications and register each as a Signal K webapp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macjl/signalk-navico-mfd-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/macjl/signalk-navico-mfd-app/issues"
+  },
+  "homepage": "https://github.com/macjl/signalk-navico-mfd-app#readme",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src",
+    "dist/tools",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "signalk-node-server-plugin",
+    "signalk",
+    "navico",
+    "mfd"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "simulate": "node dist/tools/simulate.js",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "@signalk/server-api": "file:../signalk-server-navico-webapps/packages/server-api",
+    "@types/express": "^4.17.25",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3",
+    "express": "^4.22.2"
+  }
+}
